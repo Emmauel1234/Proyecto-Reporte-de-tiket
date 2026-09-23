@@ -1,2 +1,2 @@
 # Proyecto-Reporte-de-tiket
-Proyecto integrador cuatrimestral.
+Proyeto integrador enfocado en plataforma de Android.
