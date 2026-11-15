@@ -1,41 +1,46 @@
 package com.example.apptiket
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import com.example.apptiket.data.SessionManager
 import com.example.apptiket.ui.LoginScreen
 import com.example.apptiket.ui.LoginViewModel
+import com.example.apptiket.ui.MainScreen
+import com.example.apptiket.ui.TicketsViewModel
+import com.example.apptiket.ui.theme.TiketTheme
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: LoginViewModel by viewModels()
+    private val ticketsViewModel: TicketsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // Encabezado y login son oscuros: íconos claros en la barra de estado
+        enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
+
+        val session = SessionManager(applicationContext)
+
         setContent {
-            MaterialTheme {
+            TiketTheme {
                 val state by viewModel.state.collectAsState()
 
                 if (state.isLoggedIn) {
-                    // Temporal: aquí irá la navegación a las otras 2 pantallas
-                    HomePlaceholder(
+                    MainScreen(
                         userName = state.userName.orEmpty(),
-                        onLogout = viewModel::logout
+                        employeeNumber = session.employeeNumber,
+                        viewModel = ticketsViewModel,
+                        onLogout = {
+                            ticketsViewModel.reiniciar()
+                            viewModel.logout()
+                        }
                     )
                 } else {
                     LoginScreen(
@@ -45,20 +50,6 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun HomePlaceholder(userName: String, onLogout: () -> Unit) {
-    Surface(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text("Sesión iniciada: $userName")
-            Button(onClick = onLogout) { Text("Cerrar sesión") }
         }
     }
 }

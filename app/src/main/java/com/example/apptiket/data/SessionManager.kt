@@ -11,6 +11,7 @@ class SessionManager(context: Context) {
 
     val token: String? get() = prefs.getString(KEY_TOKEN, null)
     val userName: String? get() = prefs.getString(KEY_NAME, null)
+    val employeeNumber: String? get() = prefs.getString(KEY_EMPLOYEE, null)
     val isLoggedIn: Boolean get() = !token.isNullOrBlank()
 
     fun save(token: String, user: UserDto) {
