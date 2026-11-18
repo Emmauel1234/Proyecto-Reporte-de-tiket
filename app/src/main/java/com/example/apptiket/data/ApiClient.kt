@@ -50,7 +50,7 @@ interface TicketsApi {
 object ApiClient {
 
     // Cambia esta IP por la IPv4 de tu computadora (ej. http://192.168.1.50:8000/api/)
-    private const val BASE_URL = "http:// 192.168.100.7/api/"
+    private const val BASE_URL = "http://192.168.100.7:8000/api/"
 
     private fun buildRetrofit(session: SessionManager): Retrofit {
         val authInterceptor = Interceptor { chain ->
