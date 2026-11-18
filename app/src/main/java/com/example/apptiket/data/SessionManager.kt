@@ -10,6 +10,7 @@ class SessionManager(context: Context) {
         .getSharedPreferences("session", Context.MODE_PRIVATE)
 
     val token: String? get() = prefs.getString(KEY_TOKEN, null)
+    val userId: Int get() = prefs.getInt(KEY_ID, 0)
     val userName: String? get() = prefs.getString(KEY_NAME, null)
     val employeeNumber: String? get() = prefs.getString(KEY_EMPLOYEE, null)
     val isLoggedIn: Boolean get() = !token.isNullOrBlank()
@@ -17,6 +18,7 @@ class SessionManager(context: Context) {
     fun save(token: String, user: UserDto) {
         prefs.edit {
             putString(KEY_TOKEN, token)
+            putInt(KEY_ID, user.id)
             putString(KEY_NAME, user.name)
             putString(KEY_EMPLOYEE, user.employeeNumber)
             putString(KEY_ROLE, user.role)
@@ -27,6 +29,7 @@ class SessionManager(context: Context) {
 
     private companion object {
         const val KEY_TOKEN = "token"
+        const val KEY_ID = "user_id"
         const val KEY_NAME = "name"
         const val KEY_EMPLOYEE = "employee_number"
         const val KEY_ROLE = "role"

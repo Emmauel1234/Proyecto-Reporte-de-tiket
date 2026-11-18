@@ -55,10 +55,7 @@ import androidx.compose.ui.unit.sp
 import com.example.apptiket.ui.theme.TiketColors
 import com.example.apptiket.ui.theme.TiketTheme
 
-/**
- * Login rediseñado. Mantiene la misma firma y la misma lógica de validación que tu versión
- * anterior, así que LoginViewModel y MainActivity siguen funcionando igual.
- */
+
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,

@@ -98,6 +98,7 @@ fun DetalleTicketScreen(
                     imagen = foto
                 )
             )
+            error = null
         }
     }
 
@@ -105,18 +106,27 @@ fun DetalleTicketScreen(
         val checklistFinal = ticket.checklist.mapIndexed { i, item ->
             item.copy(hecho = hechos.getOrElse(i) { item.hecho })
         }
-        if (estatus == Estatus.CERRADO && checklistFinal.any { !it.hecho }) {
-            error = "Completa todo el checklist antes de cerrar el ticket."
-        } else {
-            error = null
-            onGuardar(
-                ticket.copy(
-                    estatus = estatus,
-                    checklist = checklistFinal,
-                    notas = notas.trim(),
-                    evidencias = evidencias.toList()
+        when {
+            estatus == Estatus.CERRADO && checklistFinal.any { !it.hecho } -> {
+                error = "Completa todo el checklist antes de cerrar el ticket."
+            }
+            ticket.estatus == Estatus.PENDIENTE && estatus == Estatus.CERRADO -> {
+                error = "Primero cambia el estatus a En Proceso y guarda para tomar el ticket."
+            }
+            estatus == Estatus.CERRADO && evidencias.none { it.imagen != null } -> {
+                error = "Adjunta al menos una foto de evidencia antes de cerrar el ticket."
+            }
+            else -> {
+                error = null
+                onGuardar(
+                    ticket.copy(
+                        estatus = estatus,
+                        checklist = checklistFinal,
+                        notas = notas.trim(),
+                        evidencias = evidencias.toList()
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -419,4 +429,3 @@ private fun EvidenciaItem(ev: Evidencia, onEliminar: () -> Unit) {
         }
     }
 }
-
